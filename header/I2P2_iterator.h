@@ -4,6 +4,7 @@
 #include "I2P2_def.h"
 
 namespace I2P2 {
+
 struct Node {
 	Node *prev;
 	Node *next;
@@ -27,6 +28,7 @@ struct iterator_impl_base {
   virtual bool operator>(const iterator_impl_base &rhs) const = 0;
   virtual bool operator<=(const iterator_impl_base &rhs) const = 0;
   virtual bool operator>=(const iterator_impl_base &rhs) const = 0;
+	virtual iterator_impl_base* clone() const  = 0;
   /* This is the base class of all the container-specialized iterators
    * In order to invoke a derived function from this class
    * you may have to either do a downcast or invoke from a virtual function */
@@ -62,6 +64,7 @@ class list_iterator : public iterator_impl_base {
  protected:
   // You may want to declare what your list_iterator stores here
   Node* _node;
+
  public:
 	using self_type = list_iterator;
   list_iterator();
@@ -132,6 +135,7 @@ class iterator : public const_iterator {
   using pointer = I2P2::pointer;
   using reference = I2P2::reference;
   using iterator_category = std::random_access_iterator_tag;
+	using self_type = iterator;
 
  public:
   iterator();
