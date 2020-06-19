@@ -1,0 +1,14 @@
+﻿  I2P2_main.cpp
+  I2P2_iterator.cpp
+  I2P2_List.cpp
+w:\project2\project2\i2p miniproject2\header\i2p2_def.h(6): error C2039: 'ptrdiff_t': 不是 'std' 的成員
+  a:\vscode\vc\tools\msvc\14.16.27023\include\cstdint(17): note: 請參閱 'std' 的宣告
+w:\project2\project2\i2p miniproject2\header\i2p2_def.h(7): error C2039: 'size_t': 不是 'std' 的成員
+  a:\vscode\vc\tools\msvc\14.16.27023\include\cstdint(17): note: 請參閱 'std' 的宣告
+  I2P2_test.cpp
+  I2P2_Vector.cpp
+w:\project2\project2\i2p miniproject2\header\i2p2_def.h(6): error C2039: 'ptrdiff_t': 不是 'std' 的成員
+  a:\vscode\vc\tools\msvc\14.16.27023\include\cstdint(17): note: 請參閱 'std' 的宣告
+w:\project2\project2\i2p miniproject2\header\i2p2_def.h(7): error C2039: 'size_t': 不是 'std' 的成員
+  a:\vscode\vc\tools\msvc\14.16.27023\include\cstdint(17): note: 請參閱 'std' 的宣告
+  正在產生程式碼...
