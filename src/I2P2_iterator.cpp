@@ -224,6 +224,7 @@ namespace I2P2 {
 		if (p_)
 			delete p_;
 		p_ = rhs.p_->clone();
+		return *this;
 	}
 
 	const_iterator& const_iterator::operator++() {

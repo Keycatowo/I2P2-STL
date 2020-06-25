@@ -13,6 +13,14 @@ namespace owo {
 		return tmp;
 	}
 
+	Node* get_Node_ptr_from_data_ptr(const I2P2::value_type* ptr) {
+		Node* tmp;
+		tmp = reinterpret_cast<Node*>(
+			reinterpret_cast<size_t>(ptr) - offsetof(Node, data)
+			);
+		return tmp;
+	}
+
 }// namespace I2P2
 
 /* list basic  */

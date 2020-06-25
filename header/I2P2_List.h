@@ -7,6 +7,9 @@ namespace I2P2 {
 struct Node;
 
 class List : public ordered_container {
+private:
+	void swap(List &rhs);
+
  protected:
   // you may want to declare necessary members for your List container here
 	 Node* _head;
