@@ -9,7 +9,9 @@ struct Node;
 class List : public ordered_container {
  protected:
   // you may want to declare necessary members for your List container here
-
+	 Node* _head;
+	 Node* _tail;
+	 size_type _size;
   /* The following are standard methods from the STL
    * If you are not sure what they do
    * look them up and implement your own version */

@@ -126,6 +126,7 @@ class const_iterator {
    * and you may want to have some ways to 
    * invoke a container-specialized method from here
    * for insert/erase methods (look at their parameters if you are not sure) */
+	//const_iterator operator+(size_type offset) const;
 };
 
 class iterator : public const_iterator {

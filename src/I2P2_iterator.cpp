@@ -127,8 +127,8 @@ namespace I2P2 {
 	/* constructor */
 	vector_iterator::vector_iterator()
 		: index(nullptr) {}
-	vector_iterator::vector_iterator(value_type* d)
-		: index(nullptr) {}
+	vector_iterator::vector_iterator(value_type* ptr)
+		: index(ptr) {}
 
 
 	base_itr_ref vector_iterator::operator++() {
@@ -500,3 +500,4 @@ namespace I2P2 {
 		// bool
 
 }	// namespace I2P2 iterator
+

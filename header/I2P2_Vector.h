@@ -7,8 +7,10 @@ namespace I2P2 {
 class Vector : public randomaccess_container {
  private:
   // you may want to declare the necessary members for your Vector here
-
-
+	 value_type* _begin;
+	 value_type* _last;
+	 value_type* _end;
+	 void swap(Vector &rhs);
   /* The following are standard methods from the STL
    * If you are not sure what they do
    * look them up and implement your own version */
@@ -41,6 +43,7 @@ class Vector : public randomaccess_container {
   void push_front(const_reference val);
   void reserve(size_type new_capacity);
   void shrink_to_fit();
+	
 };
 }  // namespace I2P2
 
