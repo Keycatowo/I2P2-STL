@@ -280,14 +280,12 @@ namespace I2P2 {
 	}
 
 	const_pointer const_iterator::operator->() const {
-		/// not sure for this
-//		return &(**p_);
     return (*p_).operator->();
 	}
 
 	const_reference const_iterator::operator*() const {
-//		return **p_;
-    return (*p_).operator*();
+		return **p_;
+    //return (*p_).operator*();
 	}
 
 	const_reference const_iterator::operator[](difference_type offset) const {
@@ -365,14 +363,12 @@ namespace I2P2 {
 		// can't just move
 			// because it's const function
 			// should build a temp element to deal with and return
-			/// not sure should just use tmp= or new a object
 		auto tmp = *this;
 		tmp += offset;
 		return tmp;
 	}
 	iterator& iterator::operator-=(difference_type offset) {
 		// move iterator is move it's pointer
-		/// can only deal with postive offset now
 		(*p_) -= offset;
 		return *this;
 	}
@@ -391,24 +387,16 @@ namespace I2P2 {
 	}
 
 	pointer iterator::operator->() const {
-		/// not sure for this
-//		return &(**p_);
     return (*p_).operator->();
 	}
 
 	reference iterator::operator*() const {
-//		return **p_;
-    return (*p_).operator*();
+		return **p_;
 	}
 
 	reference iterator::operator[](difference_type offset) const {
-//		auto tmp = *this;
-//		tmp += offset;
-//		return tmp;
+    return (*p_)[offset];
 
-//    return (*p_)[offset];
-
-    return p_->operator[](offset);
 	}
 
 	// keep using the

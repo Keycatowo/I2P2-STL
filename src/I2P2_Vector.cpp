@@ -4,14 +4,14 @@
 /* useful function*/
 namespace owo {
 
-	template <typename T> void swap(T& a, T&b){
+	template <typename T> void swap(T& a, T&b) {
 		T c = a;
 		a = b;
 		b = c;
 	}
 
-	template<typename InputIterator, class OutputIterator>
-	OutputIterator copy(InputIterator first, InputIterator last, OutputIterator result)
+	template<typename T1, typename T2>
+	T2 copy(T1 first, T1 last, T2 result)
 	{
 		while (first != last) {
 			*result = *first;
@@ -20,8 +20,8 @@ namespace owo {
 		return result;
 	}
 
-	template< typename BidirIt1, typename BidirIt2 >
-	BidirIt2 copy_backward(BidirIt1 first, BidirIt1 last, BidirIt2 d_last)
+	template< typename T1, typename T2 >
+	T2 copy_backward(T1 first, T1 last, T2 d_last)
 	{
 		while (first != last) {
 			*(--d_last) = *(--last);
@@ -33,22 +33,16 @@ namespace owo {
 		return (a < b) ? b : a;
 	}
 
-	template <typename ForwardIterator, typename T>
-	void fill(ForwardIterator first, ForwardIterator last, T val)
+	template <typename T1, typename T>
+	void fill(T1 first, T1 last, T val)
 	{
 		while (first != last) {
 			*first = val;
 			++first;
 		}
 	}
-
-	I2P2::difference_type size2difference(I2P2::size_type size) {
-		I2P2::difference_type rtv = 0;
-		while (size--)
-			rtv++;
-		return rtv;
-	}
 }
+
 
 
 /* vector basic cuntion */
@@ -112,8 +106,6 @@ namespace I2P2 {
 	bool Vector::empty() const {
 		return size() == 0;
 	}
-
-	/// option: move
 
 }  // namespace I2P2
 
@@ -287,6 +279,8 @@ namespace I2P2 {
 		auto count = end - begin;
 		Vector tmp;
 		tmp.clear();
+		tmp.reserve(count);
+		reserve(size() + count);
 		while (begin != end) {
 			tmp.push_back(*begin);
 			push_back(*begin);
