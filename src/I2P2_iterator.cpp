@@ -43,33 +43,33 @@ base_itr_ref list_iterator::operator-=(difference_type offset) {
 }
 
 bool list_iterator::operator==(const iterator_impl_base &rhs) const {
-	auto tmp = dynamic_cast<const list_iterator*>(&rhs);
-	return _node == tmp->_node;
+	auto tmp = dynamic_cast<const list_iterator&>(rhs);
+	return _node == tmp._node;
 }
 
 bool list_iterator::operator!=(const iterator_impl_base &rhs) const {
-	auto tmp = dynamic_cast<const list_iterator*>(&rhs);
-	return _node != tmp->_node;
+	auto tmp = dynamic_cast<const list_iterator&>(rhs);
+	return _node != tmp._node;
 }
 
 bool list_iterator::operator<(const iterator_impl_base &rhs) const {
-	auto tmp = dynamic_cast<const list_iterator*>(&rhs);
-	return _node < tmp->_node;
+	auto tmp = dynamic_cast<const list_iterator&>(rhs);
+	return _node < tmp._node;
 }
 
 bool list_iterator::operator>(const iterator_impl_base &rhs) const {
-	auto tmp = dynamic_cast<const list_iterator*>(&rhs);
-	return _node > tmp->_node;
+	auto tmp = dynamic_cast<const list_iterator&>(rhs);
+	return _node > tmp._node;
 }
 
 bool list_iterator::operator<=(const iterator_impl_base &rhs) const {
-	auto tmp = dynamic_cast<const list_iterator*>(&rhs);
-	return _node <= tmp->_node;
+	auto tmp = dynamic_cast<const list_iterator&>(rhs);
+	return _node <= tmp._node;
 }
 
 bool list_iterator::operator>=(const iterator_impl_base &rhs) const {
-	auto tmp = dynamic_cast<const list_iterator*>(&rhs);
-	return _node >= tmp->_node;
+	auto tmp = dynamic_cast<const list_iterator&>(rhs);
+	return _node >= tmp._node;
 }
 
 difference_type list_iterator::operator-(const iterator_impl_base &rhs) const {
@@ -402,9 +402,13 @@ namespace I2P2 {
 	}
 
 	reference iterator::operator[](difference_type offset) const {
-		auto tmp = (*this);
-		tmp += offset;
-		return *tmp;
+//		auto tmp = *this;
+//		tmp += offset;
+//		return tmp;
+
+//    return (*p_)[offset];
+
+    return p_->operator[](offset);
 	}
 
 	// keep using the
@@ -412,6 +416,5 @@ namespace I2P2 {
 		// =
 		// bool
   // from const_iterator
-
 }	// namespace I2P2 iterator
 
