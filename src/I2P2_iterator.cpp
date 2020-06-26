@@ -91,7 +91,7 @@ difference_type list_iterator::operator-(const iterator_impl_base &rhs) const {
 }
 
 pointer list_iterator::operator->()const {
-	/// I'm super not sure for this 
+	/// I'm super not sure for this
 	return &(_node->data);
 }
 
@@ -152,34 +152,34 @@ namespace I2P2 {
 	}
 
 	bool vector_iterator::operator==(const iterator_impl_base &rhs) const {
-		auto tmp = dynamic_cast<const vector_iterator*>(&rhs);
-		return index == tmp->index;
+		auto tmp = dynamic_cast<const vector_iterator&>(rhs);
+		return index == tmp.index;
 	}
 	bool vector_iterator::operator!=(const iterator_impl_base &rhs) const {
-		auto tmp = dynamic_cast<const vector_iterator*>(&rhs);
-		return index != tmp->index;
+		auto tmp = dynamic_cast<const vector_iterator&>(rhs);
+		return index != tmp.index;
 	}
 	bool vector_iterator::operator>(const iterator_impl_base &rhs) const {
-		auto tmp = dynamic_cast<const vector_iterator*>(&rhs);
-		return index > tmp->index;
+		auto tmp = dynamic_cast<const vector_iterator&>(rhs);
+		return index > tmp.index;
 	}
 	bool vector_iterator::operator<(const iterator_impl_base &rhs) const {
-		auto tmp = dynamic_cast<const vector_iterator*>(&rhs);
-		return index < tmp->index;
+		auto tmp = dynamic_cast<const vector_iterator&>(rhs);
+		return index < tmp.index;
 	}
 	bool vector_iterator::operator>=(const iterator_impl_base &rhs) const {
-		auto tmp = dynamic_cast<const vector_iterator*>(&rhs);
-		return index >= tmp->index;
+		auto tmp = dynamic_cast<const vector_iterator&>(rhs);
+		return index >= tmp.index;
 	}
 	bool vector_iterator::operator<=(const iterator_impl_base &rhs) const {
-		auto tmp = dynamic_cast<const vector_iterator*>(&rhs);
-		return index <= tmp->index;
+		auto tmp = dynamic_cast<const vector_iterator&>(rhs);
+		return index <= tmp.index;
 	}
 
 
 	difference_type vector_iterator::operator-(const iterator_impl_base &rhs) const {
-		auto tmp = dynamic_cast<const vector_iterator*>(&rhs);
-		return index - tmp->index;
+		auto tmp = dynamic_cast<const vector_iterator&>(rhs);
+		return index - tmp.index;
 	}
 
 	pointer vector_iterator::operator->() const {
@@ -204,7 +204,7 @@ namespace I2P2 {
 	const_iterator::~const_iterator() {
 		// destroy iterator base pointer
 		delete p_;
-		p_ = 0;
+		p_ = nullptr;
 	}
 
 	const_iterator::const_iterator()
@@ -249,91 +249,45 @@ namespace I2P2 {
 		return tmp;
 	}
 	const_iterator& const_iterator::operator+=(difference_type offset) {
-		// += just move forward multi steps
-		
-		if (offset == 0)	// deal with zero steps
-			return *this;
-		
-		if (offset > 0) { // deal with postive steps
-			while (offset--) {
-				++(*p_);
-			}
-		}
-		
-		else { // deal with negative steps
-			while (offset++)
-			{
-				--(*p_);
-			}
-		}
+	  // move iterator is move it's pointer
+		(*p_) += offset;
 		return *this;
-		
+
 	}
 	const_iterator const_iterator::operator+(difference_type offset) const {
 		// can't just move
 			// because it's const function
 			// should build a temp element to deal with and return
-			/// not sure should just use tmp= or new a object
 		auto tmp = *this;
-		while (offset--) {
-			++tmp;
-		}
+		tmp += offset;
 		return tmp;
 	}
 	const_iterator& const_iterator::operator-=(difference_type offset) {
-		// -= is also just move backward multi steps
-		/// can only deal with postive offset now
-		while (offset--) {
-			--(*p_);
-		}
+	  // move iterator is move it's pointer
+		(*p_) -= offset;
 		return *this;
 	}
 	const_iterator const_iterator::operator-(difference_type offset) const {
 		// give the distance to calculate the iterator
 		auto tmp = *this;
-		if (offset == 0) // zero steps
-			return *this;
-		if (offset>0){	 // postive steps
-			while (offset--) {
-				--tmp;
-			}
-		}
-		else{						 // negative steps
-			while(offset++){
-				++tmp;
-			}
-		}
-		return *this;
+		tmp -= offset;
+		return tmp;
 	}
 
 	difference_type const_iterator::operator-(const const_iterator &rhs) const {
 		// give two const_iterator to calculate the distance
-		auto tmp = *this;
-		difference_type count = 0;
-		if (tmp == rhs)
-			return 0;
-		if (tmp > rhs) {
-			while (tmp != rhs) {
-				--tmp;
-				++count;
-			}
-		}
-		else {
-			while (tmp != rhs) {
-				++tmp;
-				--count;
-			}
-		}
-		return count;
+		return *p_ - *(rhs.p_);
 	}
 
 	const_pointer const_iterator::operator->() const {
 		/// not sure for this
-		return &(**p_);
+//		return &(**p_);
+    return (*p_).operator->();
 	}
 
 	const_reference const_iterator::operator*() const {
-		return **p_;
+//		return **p_;
+    return (*p_).operator*();
 	}
 
 	const_reference const_iterator::operator[](difference_type offset) const {
@@ -367,21 +321,21 @@ namespace I2P2 {
 /* implement of iterator */
 namespace I2P2 {
 
-	
+
 
 	iterator::iterator()
 		: const_iterator() {}
 
 	iterator::iterator(const iterator &rhs){
-		p_ = (rhs.p_->clone());
-		// copy_const using clone function from iterator base
+	  // copy_const using clone function from iterator base
+		p_ = rhs.p_->clone();
 	}
 
 	iterator::iterator(iterator_impl_base *p) {
-		p_ = (p->clone());
 		// using clone from iterator base
+		p_ = (p->clone());
 	}
-		
+
 	iterator& iterator::operator++() {
 		// itr++
 		++(*p_);
@@ -402,23 +356,8 @@ namespace I2P2 {
 		return tmp;
 	}
 	iterator& iterator::operator+=(difference_type offset) {
-		// += just move forward multi steps
-
-		if (offset == 0)	// deal with zero steps
-			return *this;
-
-		if (offset > 0) { // deal with postive steps
-			while (offset--) {
-				++(*p_);
-			}
-		}
-
-		else { // deal with negative steps
-			while (offset++)
-			{
-				--(*p_);
-			}
-		}
+		// move iterator is move it's pointer
+		(*p_) += offset;
 		return *this;
 
 	}
@@ -428,65 +367,38 @@ namespace I2P2 {
 			// should build a temp element to deal with and return
 			/// not sure should just use tmp= or new a object
 		auto tmp = *this;
-		while (offset--) {
-			++tmp;
-		}
+		tmp += offset;
 		return tmp;
 	}
 	iterator& iterator::operator-=(difference_type offset) {
-		// -= is also just move backward multi steps
+		// move iterator is move it's pointer
 		/// can only deal with postive offset now
-		while (offset--) {
-			--(*p_);
-		}
+		(*p_) -= offset;
 		return *this;
 	}
 	iterator iterator::operator-(difference_type offset) const {
-		// give the distance to calculate the iterator
+		// can't just move
+			// because it's const function
+			// should build a temp element to deal with and return
 		auto tmp = *this;
-		if (offset == 0) // zero steps
-			return *this;
-		if (offset > 0) {	 // postive steps
-			while (offset--) {
-				--tmp;
-			}
-		}
-		else {						 // negative steps
-			while (offset++) {
-				++tmp;
-			}
-		}
-		return *this;
+		tmp -= offset;
+		return tmp;
 	}
 
 	difference_type iterator::operator-(const iterator &rhs) const {
-		// give two const_iterator to calculate the distance
-		auto tmp = *this;
-		difference_type count = 0;
-		if (tmp == rhs)
-			return 0;
-		if (tmp > rhs) {
-			while (tmp != rhs) {
-				--tmp;
-				++count;
-			}
-		}
-		else {
-			while (tmp != rhs) {
-				++tmp;
-				--count;
-			}
-		}
-		return count;
+		// give two iterator to calculate the distance
+		return *p_ - *(rhs.p_);
 	}
 
 	pointer iterator::operator->() const {
 		/// not sure for this
-		return &(**p_);
+//		return &(**p_);
+    return (*p_).operator->();
 	}
 
 	reference iterator::operator*() const {
-		return **p_;
+//		return **p_;
+    return (*p_).operator*();
 	}
 
 	reference iterator::operator[](difference_type offset) const {
@@ -495,10 +407,11 @@ namespace I2P2 {
 		return *tmp;
 	}
 
-	// keep using the 
+	// keep using the
 		// ~()
 		// =
 		// bool
+  // from const_iterator
 
 }	// namespace I2P2 iterator
 
