@@ -3,7 +3,7 @@
 
 /* useful function*/
 namespace owo {
-	
+
 	template <typename T> void swap(T& a, T&b){
 		T c = a;
 		a = b;
@@ -47,7 +47,7 @@ namespace owo {
 
 /* vector basic cuntion */
 namespace I2P2 {
-  
+
 	/* swap two vector */
 	void Vector::swap(Vector &rhs) {
 		owo::swap(_begin, rhs._begin);
@@ -123,7 +123,7 @@ namespace I2P2 {
 	void Vector::push_front(const_reference val) {
 		// push back and move the place
 		push_back(val);
-		owo::copy_backward(begin(), end()-1, end());
+		owo::copy_backward(begin(), end(), end()+1);
 		*_begin = val;
 	}
 
@@ -164,7 +164,7 @@ namespace I2P2 {
 	}
 
 	void Vector::shrink_to_fit() {
-		// let the capacity fit the size 
+		// let the capacity fit the size
 		if (empty())
 			clear();
 		else {
@@ -190,9 +190,9 @@ namespace I2P2 {
 		return itr;
 	}
 	const_iterator Vector::begin() const {
-		/// same to none_const, but I'm not sure for this
+		/// same to no-const
 		vector_iterator p(_begin);
-		iterator itr(&p);
+		const_iterator itr(&p);
 		return itr;
 	}
 
@@ -204,7 +204,7 @@ namespace I2P2 {
 	}
 	const_iterator Vector::end() const {
 		vector_iterator p(_last);
-		iterator itr(&p);
+		const_iterator itr(&p);
 		return itr;
 	}
 
@@ -256,12 +256,6 @@ namespace I2P2 {
 
 	void Vector::insert(const_iterator pos, size_type count, const_reference val) {
 		reserve(size() + count);
-		/*
-		const_iterator tmp_end = end();
-		
-		owo::copy_backward(pos, tmp_end, tmp_end + count);
-		owo::fill(pos, pos_plus_count, val);
-		*/
 		const_iterator pos_plus_count = pos + count;
 		owo::copy_backward(const_cast<pointer> (&*pos), const_cast<pointer> (&*end()), const_cast<pointer> (&*end()) + count);
 		owo::fill(const_cast<pointer> (&*pos), const_cast<pointer> (&*pos_plus_count), val);
@@ -278,13 +272,9 @@ namespace I2P2 {
 		pointer R_ptr = const_cast<pointer> (&*end);
 		pointer pos_ptr = const_cast<pointer> (&*pos);
 		owo::copy(L_ptr, R_ptr, tmp_head);
-
-		//const_iterator tmp_end = this->end();
-		//vector_iterator ptr(tmp_head);
-		//const_iterator tmp_begin(&ptr);
-		//const_iterator begin_plus_count = tmp_begin + count;
-		// move the back part
+		// move the origin data
 		owo::copy_backward(pos_ptr, const_cast<pointer>(&*(this->end())), const_cast<pointer>(&*(this->end())) + count);
+		// copy from tmp list
 		owo::copy(tmp_head, tmp_end, pos_ptr);
 		_last += count;
 		delete[] tmp_head;
