@@ -1,5 +1,5 @@
 #include "../header/I2P2_Vector.h"
-#include <algorithm> //swap max copy
+#include <iostream>
 
 /* useful function*/
 namespace owo {
@@ -20,14 +20,13 @@ namespace owo {
 		return result;
 	}
 
-	template<typename BidirectionalIterator1, typename BidirectionalIterator2>
-	BidirectionalIterator2 copy_backward(BidirectionalIterator1 first,
-		BidirectionalIterator1 last,
-		BidirectionalIterator2 result)
+	template< typename BidirIt1, typename BidirIt2 >
+	BidirIt2 copy_backward(BidirIt1 first, BidirIt1 last, BidirIt2 d_last)
 	{
-		while (last != first)
-			*(--result) = *(--last);
-		return result;
+		while (first != last) {
+			*(--d_last) = *(--last);
+		}
+		return d_last;
 	}
 
 	template <typename T> const T& max(const T& a, const T& b) {
@@ -41,6 +40,13 @@ namespace owo {
 			*first = val;
 			++first;
 		}
+	}
+
+	I2P2::difference_type size2difference(I2P2::size_type size) {
+		I2P2::difference_type rtv = 0;
+		while (size--)
+			rtv++;
+		return rtv;
 	}
 }
 
@@ -57,7 +63,8 @@ namespace I2P2 {
 
 	/* destrucor */
 	Vector::~Vector() {
-		delete[] _begin;
+		if(_begin!=nullptr)
+			delete[] _begin;
 		_begin = nullptr;
 		_last = nullptr;
 		_end = nullptr;
@@ -65,7 +72,10 @@ namespace I2P2 {
 
 	/* default constructor */
 	Vector::Vector()
-		:	_begin(nullptr), _last(nullptr), _end(nullptr){}
+		:	_begin(new value_type[1]){
+		_last = _begin;
+		_end = _begin;
+	}
 
 	/* copy constructor */
 	Vector::Vector(const Vector &rhs)
@@ -122,8 +132,13 @@ namespace I2P2 {
 	}
 	void Vector::push_front(const_reference val) {
 		// push back and move the place
-		push_back(val);
-		owo::copy_backward(begin(), end(), end()+1);
+		if (empty()) {
+			push_back(val);
+			return;
+		}
+		else
+			push_back(val);
+		owo::copy_backward(begin(), end()-1, end());
 		*_begin = val;
 	}
 
@@ -232,6 +247,7 @@ namespace I2P2 {
 /* with iterator */
 namespace I2P2 {
 	void Vector::erase(const_iterator pos) {
+		//std::cout << "erase\n";
 		// erase an empty vector is a no-op
 		if (empty())
 			return;
@@ -242,10 +258,11 @@ namespace I2P2 {
 	}
 
 	void Vector::erase(const_iterator begin, const_iterator end) {
+		//std::cout << "erase_range\n";
 		// erase an empty range is a no-op
 		if (begin == end)
 			return;
-
+		
 		// replacement by forward
 		auto reduce_size = end - begin;
 		pointer begin_ptr = const_cast<pointer> (&*begin);
@@ -254,31 +271,31 @@ namespace I2P2 {
 		_last -= reduce_size;
 	}
 
+	
 	void Vector::insert(const_iterator pos, size_type count, const_reference val) {
-		reserve(size() + count);
-		const_iterator pos_plus_count = pos + count;
-		owo::copy_backward(const_cast<pointer> (&*pos), const_cast<pointer> (&*end()), const_cast<pointer> (&*end()) + count);
-		owo::fill(const_cast<pointer> (&*pos), const_cast<pointer> (&*pos_plus_count), val);
-		_last += count;
+		auto d_pos = pos - begin();
+		for (auto i = 0; i < count; i++) 
+			push_back(val);
+		owo::copy_backward(begin() + d_pos, end() - count, end());
+		owo::fill(begin() + d_pos, begin() + d_pos + count, val);
 	}
+
+		
 	void Vector::insert(const_iterator pos, const_iterator begin, const_iterator end) {
-		/// not finished yet
-		difference_type count = (end - begin);
-		reserve(size() + count);
-		// copy a tmp list to store [begin,end)
-		value_type* tmp_head = new value_type[count+1];
-		value_type* tmp_end = tmp_head + count;
-		pointer L_ptr = const_cast<pointer> (&*begin);
-		pointer R_ptr = const_cast<pointer> (&*end);
-		pointer pos_ptr = const_cast<pointer> (&*pos);
-		owo::copy(L_ptr, R_ptr, tmp_head);
-		// move the origin data
-		owo::copy_backward(pos_ptr, const_cast<pointer>(&*(this->end())), const_cast<pointer>(&*(this->end())) + count);
-		// copy from tmp list
-		owo::copy(tmp_head, tmp_end, pos_ptr);
-		_last += count;
-		delete[] tmp_head;
+		//std::cout << "insert range\n";
+		auto d_pos = pos - this->begin();
+		auto count = end - begin;
+		Vector tmp;
+		tmp.clear();
+		while (begin != end) {
+			tmp.push_back(*begin);
+			push_back(*begin);
+			begin++;
+		}
+		owo::copy_backward(this->begin() + d_pos, this->end() - count, this->end());
+		owo::copy(tmp.begin(), tmp.end(), this->begin() + d_pos);
 	}
+
 }// namespace I2P2
 
 
